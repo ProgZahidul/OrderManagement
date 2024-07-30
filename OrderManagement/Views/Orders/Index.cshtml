@@ -1,0 +1,70 @@
+﻿@model IEnumerable<OrderManagement.Models.ViewModels.OrderViewModel>
+
+@{
+    ViewData["Title"] = "Orders List";
+}
+<div class="row mb-2">
+    <div class="col-md-12 text-center">
+        <h2>Order List</h2>
+    </div>
+</div>
+
+
+<div class="row mb-2">
+    <div class="col-md-12 text-left">
+        <a asp-action="Create" class="btn btn-primary">Create New Order</a>
+    </div>
+</div>
+
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>SL</th>
+            <th>Customer Name</th>
+            <th>Phone</th>
+            <th>Total Order Quantity</th>
+            <th>Total Order Value</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            int serialNo = 1;
+            int totalQuantitySum = 0;
+            decimal totalValueSum = 0m;
+        }
+        @foreach (var orderViewModel in Model)
+        {
+            var totalQuantity = orderViewModel.Order.OrderItems.Sum(oi => oi.Quantity);
+            totalQuantitySum += totalQuantity;
+            totalValueSum += orderViewModel.Order.OrderItems.Sum(oi => oi.TotalPrice);
+
+            <tr>
+                <td>@serialNo</td>
+                <td>@orderViewModel.Customer.Name</td>
+                <td>@orderViewModel.Customer.Phone</td>
+                <td>@totalQuantity</td>
+                <td>@orderViewModel.Order.OrderItems.Sum(oi => oi.TotalPrice).ToString("C")</td>
+                <td>
+                    <a asp-action="Invoice" asp-route-id="@orderViewModel.Order.Id" class="btn btn-info">Print Invoice</a>
+                    <a asp-action="Edit" asp-route-id="@orderViewModel.Order.Id" class="btn btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@orderViewModel.Order.Id" class="btn btn-danger">Delete</a>
+                    
+                </td>
+            </tr>
+            serialNo++;
+        }
+
+        <tr>
+            <td>Total</td>
+            <td></td>
+            <td></td>
+            <td>@totalQuantitySum</td>
+            <td>@totalValueSum.ToString("C")</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+

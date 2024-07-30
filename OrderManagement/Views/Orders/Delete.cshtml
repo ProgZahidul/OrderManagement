@@ -1,0 +1,61 @@
+﻿@model OrderManagement.Models.ViewModels.OrderViewModel
+
+@{
+    ViewData["Title"] = "Delete Order";
+}
+
+<div class="row mb-2">
+    <div class="col-md-12 text-center">
+        <h2>Delete Order</h2>
+    </div>
+</div>
+
+<div class="text-center">
+    <h4>Are you sure you want to delete this order?</h4>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>Name:</th>
+            <td>@Model.Customer.Name</td>
+        </tr>
+        <tr>
+            <th>Phone:</th>
+            <td>@Model.Customer.Phone</td>
+        </tr>
+        <tr>
+            <th>Address:</th>
+            <td>@Model.Customer.Address</td>
+        </tr>
+    </table>
+
+    <hr />
+
+    <h2>Order Details</h2>
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Order.OrderItems)
+            {
+                <tr>
+                    <td>@item.Product.Name</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.UnitPrice.ToString("C")</td>
+                    <td>@item.TotalPrice.ToString("C")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" name="id" value="@Model.Order.Id" />
+        <button type="submit" class="btn btn-danger">Delete</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

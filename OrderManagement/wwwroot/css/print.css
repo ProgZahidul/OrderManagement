@@ -1,0 +1,8 @@
+﻿/* wwwroot/css/print.css */
+@media print {
+    #printButton,
+    .navbar,
+    .footer {
+        display: none;
+    }
+}

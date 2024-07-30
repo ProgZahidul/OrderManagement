@@ -1,0 +1,104 @@
+﻿@model OrderCustomerViewModel
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h1>Create Order</h1>
+
+<form asp-action="Create">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <label asp-for="CustomerName" class="control-label"></label>
+        <input asp-for="CustomerName" class="form-control" />
+        <span asp-validation-for="CustomerName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Address" class="control-label"></label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Phone" class="control-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Items.Count; i++)
+            {
+                <tr>
+                    <td>
+                        <select asp-for="Items[i].ProductId" class="form-control product-select" data-index="@i">
+                            <option value="">Select Product</option>
+                            @foreach (var product in ViewBag.Products)
+                            {
+                                <option value="@product.Id">@product.Name</option>
+                            }
+                        </select>
+                    </td>
+                    <td>
+                        <input asp-for="Items[i].UnitPrice" class="form-control unit-price" data-index="@i" readonly />
+                    </td>
+                    <td>
+                        <input asp-for="Items[i].Quantity" class="form-control quantity" data-index="@i" />
+                    </td>
+                    <td>
+                        <input asp-for="Items[i].TotalPrice" class="form-control total-price" data-index="@i" readonly />
+                    </td>
+                    <td>
+                        <button type="submit" name="command" value="delete-@i" class="btn btn-danger">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button type="submit" name="command" value="Add" class="btn btn-success">Add Item</button>
+    <button type="submit" class="btn btn-primary">Create Order</button>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.product-select').change(function () {
+                var index = $(this).data('index');
+                var productId = $(this).val();
+
+                if (productId) {
+                    $.get('/Orders/GetProductPrice', { productId: productId }, function (data) {
+                        var unitPriceInput = $('.unit-price[data-index=' + index + ']');
+                        var quantityInput = $('.quantity[data-index=' + index + ']');
+                        var totalPriceInput = $('.total-price[data-index=' + index + ']');
+
+                        unitPriceInput.val(data);
+                        var quantity = quantityInput.val();
+                        var totalPrice = data * quantity;
+                        totalPriceInput.val(totalPrice);
+                    });
+                }
+            });
+
+            $('.quantity').on('input', function () {
+                var index = $(this).data('index');
+                var quantity = $(this).val();
+                var unitPrice = $('.unit-price[data-index=' + index + ']').val();
+                var totalPrice = quantity * unitPrice;
+                $('.total-price[data-index=' + index + ']').val(totalPrice);
+            });
+        });
+    </script>
+}
