@@ -2,29 +2,36 @@
 @{
     ViewData["Title"] = "Create Order";
 }
+<div class="row mb-2">
+    <div class="col-md-12 text-center">
+        <h2>Create Order</h2>
+    </div>
+</div>
 
-<h1>Create Order</h1>
+
 
 <form asp-action="Create">
     <div asp-validation-summary="All" class="text-danger"></div>
 
-    <div class="form-group">
+    <div class="form-group col-md-6">
         <label asp-for="CustomerName" class="control-label"></label>
         <input asp-for="CustomerName" class="form-control" />
         <span asp-validation-for="CustomerName" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group col-md-6">
         <label asp-for="Address" class="control-label"></label>
         <input asp-for="Address" class="form-control" />
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
+    <div class="form-group col-md-6">
         <label asp-for="Phone" class="control-label"></label>
         <input asp-for="Phone" class="form-control" />
         <span asp-validation-for="Phone" class="text-danger"></span>
     </div>
+    <br />
+    <button type="submit" name="command" value="Add" class="btn btn-success">Add Item</button>
 
     <table class="table table-bordered">
         <thead>
@@ -37,8 +44,12 @@
             </tr>
         </thead>
         <tbody>
+            @{
+                
+            }
             @for (int i = 0; i < Model.Items.Count; i++)
             {
+                
                 <tr>
                     <td>
                         <select asp-for="Items[i].ProductId" class="form-control product-select" data-index="@i">
@@ -50,11 +61,12 @@
                         </select>
                     </td>
                     <td>
-                        <input asp-for="Items[i].UnitPrice" class="form-control unit-price" data-index="@i" readonly />
-                    </td>
-                    <td>
                         <input asp-for="Items[i].Quantity" class="form-control quantity" data-index="@i" />
                     </td>
+                    <td>
+                        <input asp-for="Items[i].UnitPrice" class="form-control unit-price" data-index="@i" readonly />
+                    </td>
+                    
                     <td>
                         <input asp-for="Items[i].TotalPrice" class="form-control total-price" data-index="@i" readonly />
                     </td>
@@ -66,7 +78,7 @@
         </tbody>
     </table>
 
-    <button type="submit" name="command" value="Add" class="btn btn-success">Add Item</button>
+    
     <button type="submit" class="btn btn-primary">Create Order</button>
 </form>
 
