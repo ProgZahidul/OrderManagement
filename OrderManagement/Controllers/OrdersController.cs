@@ -117,19 +117,7 @@ namespace OrderManagement.Controllers
             return View(orderCustomerViewModel);
         }
 
-        [HttpGet]
-        public JsonResult GetProductPrice(int productId)
-        {
-            var product = _context.Products.FirstOrDefault(p => p.Id == productId);
-            if (product == null)
-            {
-                return Json(0);
-            }
-            return Json(product.Price);
-        }
-
-
-
+        // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -159,10 +147,12 @@ namespace OrderManagement.Controllers
                     ProductId = oi.ProductId,
                     Quantity = oi.Quantity,
                     UnitPrice = oi.UnitPrice,
+                    //TotalPrice = oi.TotalPrice,
                     Product = oi.Product
                 }).ToList()
             };
 
+            ViewBag.Products = _context.Products.ToList();
             return View(orderViewModel);
         }
 
@@ -179,6 +169,7 @@ namespace OrderManagement.Controllers
             if (command == "Add")
             {
                 orderViewModel.Items.Add(new OrderItemViewModel());
+                ViewBag.Products = _context.Products.ToList();
                 return View(orderViewModel);
             }
             else if (command.Contains("delete"))
@@ -186,6 +177,7 @@ namespace OrderManagement.Controllers
                 int idx = int.Parse(command.Split('-')[1]);
                 orderViewModel.Items.RemoveAt(idx);
                 ModelState.Clear();
+                ViewBag.Products = _context.Products.ToList();
                 return View(orderViewModel);
             }
 
@@ -233,15 +225,14 @@ namespace OrderManagement.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Products = _context.Products.ToList();
             return View(orderViewModel);
         }
 
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.Id == id);
-        }
-    
-            public async Task<IActionResult> Delete(int? id)
+        
+
+
+        public async Task<IActionResult> Delete(int? id)
             {
                 if (id == null)
                 {
@@ -287,7 +278,24 @@ namespace OrderManagement.Controllers
 
                 return RedirectToAction(nameof(Index));
             }
-        
+
+
+        private bool OrderExists(int id)
+        {
+            return _context.Orders.Any(e => e.Id == id);
+        }
+
+        [HttpGet]
+        public JsonResult GetProductPrice(int productId)
+        {
+            var product = _context.Products.FirstOrDefault(p => p.Id == productId);
+            if (product == null)
+            {
+                return Json(0);
+            }
+            return Json(product.Price);
+        }
+
     }
 
 }
