@@ -15,20 +15,7 @@ namespace OrderManagement.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            //modelBuilder.Entity<Order>()
-            //.HasOne(o => o.Customer)
-            //.WithMany()
-            //.HasForeignKey(o => o.CustomerId);
-
-            //modelBuilder.Entity<OrderItem>()
-            //    .HasOne(oi => oi.Order)
-            //    .WithMany(o => o.OrderItems)
-            //    .HasForeignKey(oi => oi.OrderId);
-
-            //modelBuilder.Entity<OrderItem>()
-            //    .HasOne(oi => oi.Product)
-            //    .WithMany()
-            //    .HasForeignKey(oi => oi.ProductId);
+            
 
             modelBuilder.Entity<Product>().HasData(
                 new Product { Id = 1, Name = "Book", Price = 100 },

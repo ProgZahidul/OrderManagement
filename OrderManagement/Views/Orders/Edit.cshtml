@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Edit Order";
 }
+
 <div class="row mb-2">
     <div class="col-md-12 text-center">
         <h2>>Edit Order</h2>
@@ -30,7 +31,6 @@
     </div>
     <br />
     <button type="submit" name="command" value="Add" class="btn btn-success">Add Item</button>
-
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -50,7 +50,9 @@
                             <option value="">Select Product</option>
                             @foreach (var product in ViewBag.Products)
                             {
+
                                 <option value="@product.Id">@product.Name</option>
+
                             }
                         </select>
                     </td>
@@ -60,7 +62,7 @@
                     <td>
                         <input asp-for="Items[i].UnitPrice" class="form-control unit-price" data-index="@i" readonly />
                     </td>
-                   
+                    
                     <td>
                         <input asp-for="Items[i].TotalPrice" class="form-control total-price" data-index="@i" readonly />
                     </td>
@@ -72,7 +74,11 @@
         </tbody>
     </table>
 
-   
+    <div class="form-group">
+        <strong>Total Price:</strong> <span id="total-price">0.00</span>
+    </div>
+
+    
     <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>
 
@@ -80,6 +86,15 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
+            function updateTotalPrice() {
+                var totalPrice = 0;
+                $('.total-price').each(function () {
+                    var price = parseFloat($(this).val()) || 0;
+                    totalPrice += price;
+                });
+                $('#total-price').text(totalPrice.toFixed(2));
+            }
+
             $('.product-select').change(function () {
                 var index = $(this).data('index');
                 var productId = $(this).val();
@@ -94,6 +109,8 @@
                         var quantity = quantityInput.val();
                         var totalPrice = data * quantity;
                         totalPriceInput.val(totalPrice);
+
+                        updateTotalPrice();
                     });
                 }
             });
@@ -104,7 +121,12 @@
                 var unitPrice = $('.unit-price[data-index=' + index + ']').val();
                 var totalPrice = quantity * unitPrice;
                 $('.total-price[data-index=' + index + ']').val(totalPrice);
+
+                updateTotalPrice();
             });
+
+            
+            updateTotalPrice();
         });
     </script>
 }

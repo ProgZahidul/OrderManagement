@@ -111,13 +111,13 @@ namespace OrderManagement.Controllers
                 _context.Orders.Add(order);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Invoice", new { id = order.Id });
             }
             ViewBag.Products = _context.Products.ToList();
             return View(orderCustomerViewModel);
         }
 
-        // GET: Orders/Edit/5
+        
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -156,7 +156,7 @@ namespace OrderManagement.Controllers
             return View(orderViewModel);
         }
 
-        // POST: Orders/Edit/5
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, OrderCustomerViewModel orderViewModel, string command = "")
@@ -260,7 +260,7 @@ namespace OrderManagement.Controllers
                 return View(viewModel);
             }
 
-            // POST: Orders/Delete/5
+            
             [HttpPost, ActionName("Delete")]
             [ValidateAntiForgeryToken]
             public async Task<IActionResult> DeleteConfirmed(int id)

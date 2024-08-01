@@ -2,13 +2,12 @@
 @{
     ViewData["Title"] = "Create Order";
 }
+
 <div class="row mb-2">
     <div class="col-md-12 text-center">
         <h2>Create Order</h2>
     </div>
 </div>
-
-
 
 <form asp-action="Create">
     <div asp-validation-summary="All" class="text-danger"></div>
@@ -32,7 +31,6 @@
     </div>
     <br />
     <button type="submit" name="command" value="Add" class="btn btn-success">Add Item</button>
-
     <table class="table table-bordered">
         <thead>
             <tr>
@@ -44,19 +42,17 @@
             </tr>
         </thead>
         <tbody>
-            @{
-                
-            }
             @for (int i = 0; i < Model.Items.Count; i++)
             {
-                
                 <tr>
                     <td>
                         <select asp-for="Items[i].ProductId" class="form-control product-select" data-index="@i">
                             <option value="">Select Product</option>
                             @foreach (var product in ViewBag.Products)
                             {
-                                <option value="@product.Id">@product.Name</option>
+                           
+                                    <option value="@product.Id">@product.Name</option>
+                               
                             }
                         </select>
                     </td>
@@ -78,6 +74,10 @@
         </tbody>
     </table>
 
+    <div class="form-group">
+        <strong>Total Price:</strong> <span id="total-price">0.00</span>
+    </div>
+
     
     <button type="submit" class="btn btn-primary">Create Order</button>
 </form>
@@ -86,6 +86,15 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
+            function updateTotalPrice() {
+                var totalPrice = 0;
+                $('.total-price').each(function () {
+                    var price = parseFloat($(this).val()) || 0;
+                    totalPrice += price;
+                });
+                $('#total-price').text(totalPrice.toFixed(2));
+            }
+
             $('.product-select').change(function () {
                 var index = $(this).data('index');
                 var productId = $(this).val();
@@ -100,6 +109,8 @@
                         var quantity = quantityInput.val();
                         var totalPrice = data * quantity;
                         totalPriceInput.val(totalPrice);
+
+                        updateTotalPrice();
                     });
                 }
             });
@@ -110,7 +121,12 @@
                 var unitPrice = $('.unit-price[data-index=' + index + ']').val();
                 var totalPrice = quantity * unitPrice;
                 $('.total-price[data-index=' + index + ']').val(totalPrice);
+
+                updateTotalPrice();
             });
+
+           
+            updateTotalPrice();
         });
     </script>
 }
